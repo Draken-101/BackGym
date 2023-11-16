@@ -1,5 +1,6 @@
 {
     "app_host": "127.0.0.1",
     "app_port": 3030,
-    "app_protocol": "http"
+    "app_protocol": "http",
+    "storage_folder": "storage"
 }

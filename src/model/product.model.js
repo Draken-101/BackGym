@@ -23,6 +23,10 @@ Product.init({
         type: DataTypes.FLOAT,
         allowNull: false
     },
+    img: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     amount: {
         type: DataTypes.INTEGER,
         allowNull: false
