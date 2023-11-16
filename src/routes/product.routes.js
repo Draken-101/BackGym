@@ -1,17 +1,19 @@
 import express from 'express'
 import Product from '../model/product.model.js';
 import { uploader } from '../middleware/multipart.middleware.js';
+import fs from 'fs'
+import config from '../../app.setting.json' assert { type: 'json' }
 
 const router = express.Router()
 
 router.get('/', async function list(req, res) {
     const raw_result = await Product.findAll();
-    
+
     if (!raw_result.length) {
         return res.status(404).json([]);
     }
-    
-    let result = raw_result.map((record)=>{
+
+    let result = raw_result.map((record) => {
         return record.dataValues
     })
 
@@ -41,12 +43,46 @@ router.post('/', uploader, async function create(req, res) {
     return res.send("Product uploaded")
 })
 
-router.patch('/:id', function update(req, res) {
+router.patch('/:id', uploader, async function update(req, res) {
+
+    const product_to_update = await Product.findByPk(parseInt(req.params.id))
+
+    if (product_to_update == null) {
+        fs.unlinkSync(`${process.cwd()}/src/${config.storage_folder}/${req.body.filename}`)
+        return res.status(404).send("Product not found");
+    }
+
+    const data_to_save = {
+        name: req.body.name ? req.body.name : product_to_update.dataValues.name,
+        description: req.body.description ? req.body.description : product_to_update.dataValues.description,
+        price: req.body.price ? req.body.price : product_to_update.dataValues.price,
+        img: req.body.filename ? req.body.filename : product_to_update.dataValues.img,
+        amount: req.body.amount ? req.body.amount : product_to_update.dataValues.amount,
+    }
+
+    await product_to_update.update(data_to_save)
+
+    if (product_to_update.dataValues.img !== req.body.filename) {
+        try {
+            fs.unlinkSync(`${process.cwd()}/src/${config.storage_folder}/${product_to_update.dataValues.img}`)
+        } catch (e) {
+            console.error("No se ha podido eliminar el archivo")
+        }
+    }
+
     return res.send("update product")
 })
 
-router.delete('/:id', function remove(req, res) {
-    return res.send("Product deleted")
+router.delete('/:id', async function remove(req, res) {
+    const product_to_delete = await Product.findByPk(parseInt(req.params.id))
+
+    if (product_to_delete == null) {
+        return res.status(404).send("Product not found.");
+    }
+
+    product_to_delete.destroy()
+
+    return res.status(200).send("Product deleted")
 })
 
 export default router;
