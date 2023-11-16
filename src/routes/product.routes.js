@@ -6,8 +6,16 @@ const router = express.Router()
 
 router.get('/', async function list(req, res) {
     const raw_result = await Product.findAll();
+    
+    if (!raw_result.length) {
+        return res.status(404).json([]);
+    }
+    
+    let result = raw_result.map((record)=>{
+        return record.dataValues
+    })
 
-    return res.status(200).json(["a"]);
+    return res.status(200).json(result);
 })
 
 router.post('/', uploader, async function create(req, res) {
