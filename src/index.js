@@ -7,6 +7,7 @@ import config from '../app.setting.json' assert { type: 'json' }
 
 import user_router from './routes/user.routes.js'
 import product_router from './routes/product.routes.js'
+import cart_router from './routes/cart.routes.js'
 
 const app = express()
 const current_path = process.cwd()
@@ -41,6 +42,7 @@ app.use(express.static(`${current_path}/src/${config.storage_folder}`))
 
 app.use('/user', user_router)
 app.use('/product', product_router)
+app.use('/cart', cart_router)
 
 app.all('*', (req, res) => {
     res.status(404).send("Endpoint or method dont found :(")

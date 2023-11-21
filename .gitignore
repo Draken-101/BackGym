@@ -5,3 +5,4 @@ package-lock.json
 *.jpeg
 *.png
 *.webp
+src/storage

@@ -40,6 +40,11 @@ User.init({
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
+    },
+    role:{
+        type: DataTypes.ENUM(["admin","client","coach"]),
+        defaultValue: "client",
+        allowNull: false
     }
 },
     {

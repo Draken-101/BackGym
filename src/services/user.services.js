@@ -1,6 +1,7 @@
 import User from '../model/user.model.js';
 import cry from 'bcrypt'
 import dotenv from 'dotenv'
+import json from 'jsonwebtoken'
 
 dotenv.config()
 
@@ -17,6 +18,7 @@ export async function register(req, res) {
         lastname: req.body.lastname,
         email: req.body.email,
         password: cry.hashSync(req.body.password, parseInt(process.env["HASH_SALT"])),
+        role: req.body.role,
         payment_terms: "none",
     })
 
@@ -59,7 +61,7 @@ export async function login(req, res) {
         return res.status(401).send("Passwords do not match.");
     }
 
-    return res.status(200).send("Successful authentication.")
+    return res.status(200).send(json.sign({ username: existing_user.dataValues.name, id: existing_user.dataValues.id }, process.env["JWT_TOKEN"], { algorithm: 'HS256' }))
 }
 
 export async function remove(req, res) {
