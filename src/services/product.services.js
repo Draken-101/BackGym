@@ -25,7 +25,7 @@ export async function create(req, res) {
         !req.body.price ||
         !req.body.amount
     ) {
-        return res.status(400).send("There are missing fields for uploading the product.")
+        return res.status(400).json({ message: "There are missing fields for uploading the product.", status: false, content: [] })
     }
 
     const new_product = new Product({
@@ -37,7 +37,7 @@ export async function create(req, res) {
     })
 
     await new_product.save()
-    return res.send("Product uploaded")
+    return res.json({ message: "Product uploaded", status: true, content: [] })
 }
 
 export async function update(req, res) {

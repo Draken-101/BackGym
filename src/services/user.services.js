@@ -119,6 +119,10 @@ export async function list(req, res) {
     return res.json({
         status: true,
         message: "",
-        content: await User.findAll()
+        content: await User.findAll({
+            where: {
+                role: req.params.type
+            }
+        })
     })
 }

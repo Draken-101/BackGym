@@ -8,6 +8,6 @@ const router = express.Router()
 router.post('/register', uploader, register)
 router.post('/login', login)
 router.delete('/:id', auth, remove)
-router.get('/', auth, list)
+router.get('/:type', auth, list)
 
 export default router;
