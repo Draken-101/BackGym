@@ -140,3 +140,72 @@ export async function list(req, res) {
         })
     })
 }
+
+export async function pay(req, res) {
+    if (
+        !req.body.email ||
+        !req.body.amount ||
+        !req.body.time ||
+        !req.body.price
+    ) {
+        return res.status(400).json({
+            status: true,
+            message: "Campos inválidos, verifique de nuevo.",
+            content: []
+        })
+    }
+
+    const timeValue = parseInt(req.body.amount);
+
+    if (isNaN(timeValue) || timeValue <= 0) {
+        return res.status(400).json({
+            status: true,
+            message: "El valor de 'time' debe ser un número positivo.",
+            content: []
+        });
+    }
+
+    const user_to_update = await User.findOne({
+        where: {
+            email: req.body.email
+        }
+    })
+
+    if (!user_to_update) {
+        return res.status(404).json({
+            status: true,
+            message: "No se ha encontrado al cliente.",
+            content: []
+        })
+    }
+    const new_date = new Date(user_to_update.dataValues.active_until || new Date());
+    new_date.setHours(0, 0, 0, 0);
+
+
+    switch (req.body.time) {
+        case 'Mes':
+            new_date.setMonth(new_date.getMonth() + timeValue)
+            break;
+        case 'Dia':
+            new_date.setDate(new_date.getDate() + timeValue)
+            break;
+        case 'Año':
+            new_date.setFullYear(new_date.getFullYear() + timeValue)
+            break;
+        default:
+            break;
+    }
+
+    await user_to_update.update({
+        active_until: new_date.toISOString()
+    })
+
+    console.log(new_date.toTimeString())
+
+
+    return res.status(200).json({
+        status: true,
+        message: "",
+        content: []
+    })
+}

@@ -5,7 +5,7 @@ import { create, list, update, remove } from '../services/product.services.js';
 
 const router = express.Router()
 
-router.get('/',auth, list)
+router.get('/', list)
 router.post('/',auth, uploader, create)
 router.patch('/:id',auth, uploader, update)
 router.delete('/:id',auth, remove)

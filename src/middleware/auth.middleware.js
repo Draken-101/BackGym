@@ -14,6 +14,6 @@ export default function auth(req, res, next) {
         req.user = userinfo;
         next()
     } catch (e) {
-        return res.status(401).json({message:"Token invalid", status: false, content: [] });
+        return res.status(401).json({message:"Tu sesión ha expirado.", status: false, content: [] });
     }
 }

@@ -74,10 +74,10 @@ export async function remove(req, res) {
     const product_to_delete = await Product.findByPk(parseInt(req.params.id))
 
     if (product_to_delete == null) {
-        return res.status(404).send("Product not found.");
+        return res.status(404).json({message:"Product not found.", status: false})
     }
 
     product_to_delete.destroy()
 
-    return res.status(200).send("Product deleted")
+    return res.status(200).json({message:"Product deleted", status: true})
 }
