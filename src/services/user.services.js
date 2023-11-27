@@ -55,7 +55,9 @@ export async function register(req, res) {
                 },
                 process.env["JWT_TOKEN"],
                 { algorithm: 'HS256' }
-            )
+            ),
+            name: user_to_save.dataValues.name,
+            img: user_to_save.dataValues.img_profile
         }
     });
 }
@@ -95,7 +97,19 @@ export async function login(req, res) {
             });
     }
 
-    return res.status(200).json({ status: true, message: "User logged sucessfully.", content: { token: json.sign({ username: existing_user.dataValues.name, id: existing_user.dataValues.id }, process.env["JWT_TOKEN"], { algorithm: 'HS256' }) } })
+    return res.status(200).json({
+        status: true, message: "User logged sucessfully.", content: {
+            token: json.sign(
+                {
+                    username: existing_user.dataValues.name,
+                    id: existing_user.dataValues.id,
+                    img: existing_user.dataValues.img_profile
+                }, process.env["JWT_TOKEN"], { algorithm: 'HS256' }
+            ),
+            name: existing_user.dataValues.name,
+            img: existing_user.dataValues.img_profile
+        }
+    })
 }
 
 export async function remove(req, res) {

@@ -7,14 +7,14 @@ export async function list(req, res) {
     const raw_result = await Product.findAll();
 
     if (!raw_result.length) {
-        return res.status(404).json([]);
+        return res.status(404).json({ status: false, message: "Products not found", content: [] });
     }
 
     let result = raw_result.map((record) => {
         return record.dataValues
     })
 
-    return res.status(200).json(result);
+    return res.status(200).json({ content: result, message: "", status: true });
 }
 
 export async function create(req, res) {
