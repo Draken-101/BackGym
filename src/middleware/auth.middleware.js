@@ -5,7 +5,7 @@ dotenv.config()
 
 export default function auth(req, res, next) {
     if (!req.headers['authorization']) {
-        return res.status(401).send("Token missing");
+        return res.status(401).json({ message: "Token missing", status: false, content: [] });
     }
     const token = req.headers['authorization'].replace("Bearer ", "")
     try {
@@ -14,6 +14,6 @@ export default function auth(req, res, next) {
         req.user = userinfo;
         next()
     } catch (e) {
-        return res.status(401).send("Token invalid");
+        return res.status(401).json({message:"Token invalid", status: false, content: [] });
     }
 }

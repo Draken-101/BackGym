@@ -114,3 +114,11 @@ export async function remove(req, res) {
 
     return res.status(200).send("User successfully deleted")
 }
+
+export async function list(req, res) {
+    return res.json({
+        status: true,
+        message: "",
+        content: await User.findAll()
+    })
+}

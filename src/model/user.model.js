@@ -62,7 +62,7 @@ User.init({
     {
         sequelize: connection,
         tableName: "user",
-        timestamps: false
+        timestamps: true
     })
 
 User.sync()
