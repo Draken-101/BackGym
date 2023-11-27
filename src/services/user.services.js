@@ -14,7 +14,7 @@ export async function register(req, res) {
         !req.body.age ||
         !req.body.filename ||
         !req.body.password) {
-        return res.status(400).json({ status: false, message: "Please provide all fields required for registration.", content: [] })
+        return res.status(400).json({ status: false, message: "Please provide all fields required for registration.", content: {} })
     }
 
     const user_to_save = new User({
@@ -36,16 +36,28 @@ export async function register(req, res) {
     })
 
     if (existing_user) {
-        return res.status(409).json({ message: "There is already a user with the email provided.", status: false, content: [] })
+        return res.status(409).json({ message: "There is already a user with the email provided.", status: false, content: {} })
     }
 
     try {
         await user_to_save.save()
     } catch (e) {
-        return res.status(500).json({ message: "Something happened during user creation.", status: false, content: [] });
+        return res.status(500).json({ message: "Something happened during user creation.", status: false, content: {} });
     }
 
-    return res.status(201).json({ message: "User successfully created.", status: false, content: [] });
+    return res.status(201).json({
+        message: "User successfully created.", status: false, content: {
+            token: json.sign(
+                {
+                    username: user_to_save.dataValues.name,
+                    id: user_to_save.dataValues.id,
+                    img: user_to_save.dataValues.img_profile
+                },
+                process.env["JWT_TOKEN"],
+                { algorithm: 'HS256' }
+            )
+        }
+    });
 }
 
 export async function login(req, res) {
