@@ -63,7 +63,12 @@ export async function register(req, res) {
 export async function login(req, res) {
     if (!req.body.email ||
         !req.body.password) {
-        return res.status(400).send("Please provide all fields required for registration.")
+        return res.status(400).json(
+            {
+                status: false,
+                content: {},
+                message: "Please provide all fields required for registration."
+            });
     }
 
     const existing_user = await User.findOne({
@@ -73,14 +78,24 @@ export async function login(req, res) {
     })
 
     if (existing_user === null) {
-        return res.status(404).send("A user with the given email has not been found.");
+        return res.status(404).json(
+            {
+                status: false,
+                content: {},
+                message: "A user with the given email has not been found."
+            });
     }
 
     if (!cry.compareSync(req.body.password, existing_user.dataValues.password)) {
-        return res.status(401).send("Passwords do not match.");
+        return res.status(401).json(
+            {
+                status: false,
+                content: {},
+                message: "Passwords do not match."
+            });
     }
 
-    return res.status(200).send(json.sign({ username: existing_user.dataValues.name, id: existing_user.dataValues.id }, process.env["JWT_TOKEN"], { algorithm: 'HS256' }))
+    return res.status(200).json({ status: true, message: "User logged sucessfully.", content: { token: json.sign({ username: existing_user.dataValues.name, id: existing_user.dataValues.id }, process.env["JWT_TOKEN"], { algorithm: 'HS256' }) } })
 }
 
 export async function remove(req, res) {
