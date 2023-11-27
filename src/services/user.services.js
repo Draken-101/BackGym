@@ -6,11 +6,15 @@ import json from 'jsonwebtoken'
 dotenv.config()
 
 export async function register(req, res) {
+    console.log(req.body)
     if (!req.body.email ||
         !req.body.name ||
         !req.body.lastname ||
+        !req.body.weight ||
+        !req.body.age ||
+        !req.body.filename ||
         !req.body.password) {
-        return res.status(400).send("Please provide all fields required for registration.")
+        return res.status(400).json({ status: false, message: "Please provide all fields required for registration.", content: [] })
     }
 
     const user_to_save = new User({
@@ -19,6 +23,9 @@ export async function register(req, res) {
         email: req.body.email,
         password: cry.hashSync(req.body.password, parseInt(process.env["HASH_SALT"])),
         role: req.body.role,
+        weight: req.body.weight,
+        age: req.body.age,
+        img_profile: req.body.filename,
         payment_terms: "none",
     })
 
@@ -29,16 +36,16 @@ export async function register(req, res) {
     })
 
     if (existing_user) {
-        return res.status(409).send("There is already a user with the email provided.")
+        return res.status(409).json({ message: "There is already a user with the email provided.", status: false, content: [] })
     }
 
     try {
         await user_to_save.save()
     } catch (e) {
-        return res.status(500).send("Something happened during user creation.");
+        return res.status(500).json({ message: "Something happened during user creation.", status: false, content: [] });
     }
 
-    return res.status(201).send("User successfully created.");
+    return res.status(201).json({ message: "User successfully created.", status: false, content: [] });
 }
 
 export async function login(req, res) {

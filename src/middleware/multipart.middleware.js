@@ -4,8 +4,9 @@ import config from '../../app.setting.json' assert {type: 'json'}
 const storage = multer.diskStorage({
     destination: `${process.cwd()}/src/${config.storage_folder}`,
     filename: function (req, file, cb) {
-        req.body.filename = "data-" + file.originalname
-        cb(null, "data-" + file.originalname)
+        let ext = file.originalname.split(".")[file.originalname.split(".").length - 1]
+        req.body.filename = Date.now() + "." + ext
+        cb(null, req.body.filename)
     }
 })
 

@@ -23,6 +23,18 @@ User.init({
         type: DataTypes.STRING,
         allowNull: false
     },
+    weight: {
+        type: DataTypes.FLOAT,
+        allowNull: true
+    },
+    age: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    img_profile: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     password: {
         type: DataTypes.STRING,
         allowNull: false
@@ -41,8 +53,8 @@ User.init({
         allowNull: false,
         defaultValue: false
     },
-    role:{
-        type: DataTypes.ENUM(["admin","client","coach"]),
+    role: {
+        type: DataTypes.ENUM(["admin", "client", "coach"]),
         defaultValue: "client",
         allowNull: false
     }

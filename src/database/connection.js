@@ -11,13 +11,14 @@ const connection = new Sequelize(
         host: process.env["DATABASE_HOST"],
         dialect:process.env["DATABASE_DIALECT"],
         port: process.env["DATABASE_PORT"],
-        logging:true
+        logging:false
     }
 )
 
 try{
-    connection.authenticate()
-    console.log("Conectado a la base de datos.")
+    console.log("Estableciendo conexión a la base de datos...")
+    await connection.authenticate()
+    console.log("Conexión establecida.")
 }catch(e){
     console.error("Ha ocurrido un erro al momento de conectarse a la base de datos")
 }
