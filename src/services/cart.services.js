@@ -8,7 +8,12 @@ export async function get(req, res) {
             "client": req.user.id
         }
     })
-    res.send(currentCart)
+
+    const result = await Promise.all(currentCart.map(async (item) => {
+        return await Product.findOne({ where: { id: item.product } });
+    }));
+
+    res.json({ status: true, message: "", content: result })
 }
 
 export async function add(req, res) {
