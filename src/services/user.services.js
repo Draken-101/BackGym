@@ -144,10 +144,11 @@ export async function list(req, res) {
 }
 
 export async function pay(req, res) {
+    console.log(req.body)
     if (
         !req.body.email ||
-        !req.body.amount ||
-        !req.body.time ||
+        !req.body.amount || // 5
+        !req.body.time || // un nes
         !req.body.price
     ) {
         return res.status(400).json({
@@ -201,8 +202,6 @@ export async function pay(req, res) {
     await user_to_update.update({
         active_until: new_date.toISOString()
     })
-
-    console.log(new_date.toTimeString())
 
 
     return res.status(200).json({
